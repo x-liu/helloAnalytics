@@ -1,0 +1,22 @@
+group 'com.helloAnalytics'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'com.google.apis:google-api-services-analyticsreporting:v4-rev118-1.23.0'
+    compile group: 'com.google.apis', name: 'google-api-services-analytics', version: 'v3-rev142-1.23.0'
+    compile group: 'com.google.http-client', name: 'google-http-client-gson', version: '1.23.0'
+
+}
+task execute(type:JavaExec) {
+    main = mainClass
+    classpath = sourceSets.main.runtimeClasspath
+}
