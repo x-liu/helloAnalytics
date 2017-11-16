@@ -6,10 +6,7 @@ import com.google.api.client.json.gson.GsonFactory;
 
 import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.AnalyticsScopes;
-import com.google.api.services.analytics.model.Accounts;
-import com.google.api.services.analytics.model.GaData;
-import com.google.api.services.analytics.model.Profiles;
-import com.google.api.services.analytics.model.Webproperties;
+import com.google.api.services.analytics.model.*;
 import com.google.api.services.analyticsreporting.v4.AnalyticsReporting;
 
 import java.io.FileInputStream;
@@ -34,12 +31,29 @@ public class HelloAnalytics {
       Analytics analytics = initializeAnalytics();
 //      System.out.println("I've initialized analytics");
       String profile = getFirstProfileId(analytics);
+      AccountSummaries accountSummaries = getAccountSummaries(analytics);
       System.out.println("First Profile Id: "+ profile);
       printResults(getResults(analytics, profile));
-    } catch (Exception e) {
+      System.out.println("----------------------------------------------------------------------------------");
+      System.out.println("Account Summaries:");
+      printAccountSummaries(accountSummaries);
+    }
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
+    public static AccountSummaries getAccountSummaries(Analytics analytics) {
+        ///test code
+        try {
+            AccountSummaries accountSummaries = analytics.management().
+                    accountSummaries().list().execute();
+            return accountSummaries;
+        } catch (IOException e) {
+            System.out.println("An error occurred: " + e);
+            return null;
+        }
+        ///
+    }
 
   /**
    * Initializes an Analytics service object.
@@ -68,7 +82,6 @@ public class HelloAnalytics {
 //    System.out.println("getting first profile id");
     // Query for the list of all accounts associated with the service account.
     Accounts accounts = analytics.management().accounts().list().execute();
-
     if (accounts.getItems().isEmpty()) {
       System.err.println("No accounts found");
     } else {
@@ -121,4 +134,30 @@ public class HelloAnalytics {
       System.out.println("No results found");
     }
   }
+    //added in for account services
+    public static void printAccountSummaries(AccountSummaries accountSummaries) {
+        for (AccountSummary account : accountSummaries.getItems()) {
+            System.out.println(account.getName() + " (" + account.getId() + ")");
+            printPropertySummaries(account);
+        }
+    }
+
+    private static void printPropertySummaries(AccountSummary accountSummary) {
+        for (WebPropertySummary property : accountSummary.getWebProperties()) {
+            System.out.println("  " + property.getName() + " ("
+                    + property.getId() + ")");
+            System.out.println("  [" + property.getWebsiteUrl() + " | "
+                    + property.getLevel() + "]");
+            printProfileSummary(property);
+        }
+    }
+
+
+    private static void printProfileSummary(WebPropertySummary webPropertySummary) {
+        for (ProfileSummary profile : webPropertySummary.getProfiles()) {
+            System.out.println("    " + profile.getName()
+                    + " (" + profile.getId() + ") | " + profile.getType());
+        }
+    }
+    //
 }
