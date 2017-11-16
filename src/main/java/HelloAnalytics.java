@@ -24,7 +24,7 @@ public class HelloAnalytics {
 
   private static final String APPLICATION_NAME = "Hello Analytics";
   private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-  private static final String KEY_FILE_LOCATION = "C:\\Users\\xing.e.liu\\Desktop\\google_Analytics\\src\\main\\java\\client_secrets.json";
+  private static final String KEY_FILE_LOCATION = "client_secrets.json";
   public static void main(String[] args) {
     try {
 //        System.out.println("I've reached try");
