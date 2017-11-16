@@ -30,9 +30,9 @@ public class HelloAnalytics {
   private static final String KEY_FILE_LOCATION = "C:\\Users\\xing.e.liu\\Desktop\\google_Analytics\\src\\main\\java\\client_secrets.json";
   public static void main(String[] args) {
     try {
-        System.out.println("I've reached try");
+//        System.out.println("I've reached try");
       Analytics analytics = initializeAnalytics();
-      System.out.println("I've initialized analytics");
+//      System.out.println("I've initialized analytics");
       String profile = getFirstProfileId(analytics);
       System.out.println("First Profile Id: "+ profile);
       printResults(getResults(analytics, profile));
@@ -65,7 +65,7 @@ public class HelloAnalytics {
   private static String getFirstProfileId(Analytics analytics) throws IOException {
     // Get the first view (profile) ID for the authorized user.
     String profileId = null;
-    System.out.println("getting first profile id");
+//    System.out.println("getting first profile id");
     // Query for the list of all accounts associated with the service account.
     Accounts accounts = analytics.management().accounts().list().execute();
 
@@ -102,17 +102,21 @@ public class HelloAnalytics {
     // Query the Core Reporting API for the number of sessions
     // in the past seven days.
     return analytics.data().ga()
-        .get("ga:" + profileId, "7daysAgo", "today", "ga:sessions")
+        .get("ga:" + profileId, "today", "today", "ga:sessions")
         .execute();
   }
 
   private static void printResults(GaData results) {
     // Parse the response from the Core Reporting API for
     // the profile name and number of sessions.
-    if (results != null && !results.getRows().isEmpty()) {
+//      System.out.println("is results empty??  " + results.isEmpty());
+//      System.out.println("what is inside results column headers?? " + results.getColumnHeaders());
+//    if (results != null && !results.getRows().isEmpty()) {
+      if (results != null && !results.isEmpty()) {
       System.out.println("View (Profile) Name: "
         + results.getProfileInfo().getProfileName());
-      System.out.println("Total Sessions: " + results.getRows().get(0).get(0));
+//      System.out.println("Total Sessions: " + results.getRows().get(0).get(0));
+        System.out.println("Total Sessions: " + results.getTotalsForAllResults().get("ga:sessions"));
     } else {
       System.out.println("No results found");
     }
